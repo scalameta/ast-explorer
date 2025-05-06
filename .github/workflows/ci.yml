@@ -1,11 +1,15 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["*"]
 
 jobs:
   build:
     strategy:
       fail-fast: false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: coursier/cache-action@v6.3
@@ -13,9 +17,12 @@ jobs:
         with:
           power: true
       - run: npm install && npm run buildForGithubPages
+
       - name: Test
         run: scala-cli test .
+
       - name: Publish gh-pages
+        if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

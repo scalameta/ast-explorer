@@ -178,7 +178,10 @@ case class TreeView(
           title := "Copy node structure",
           "[copy]",
           onClick.preventDefault --> { _ =>
-            copyTreeStructure(id)
+            openNodes.update(_ + id)
+            dom.window.requestAnimationFrame { _ =>
+              copyTreeStructure(id)
+            }
           }
         )
       else emptyNode,

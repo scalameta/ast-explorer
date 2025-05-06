@@ -1,5 +1,6 @@
 import com.raquo.laminar.api.L.*
 
+import org.scalajs.dom
 import scala.annotation.tailrec
 import scala.meta.*
 import com.raquo.airstream.core.Signal
@@ -33,10 +34,56 @@ case class TreeView(
         cls := "bg-gray-200 hover:bg-gray-300 rounded-md px-2 py-1 text-xs",
         "expand all",
         onClick.mapTo(direct.keySet) --> openNodes
+      ),
+      a(
+        href := "#",
+        cls := "bg-gray-200 hover:bg-gray-300 rounded-md px-2 py-1 text-xs",
+        "copy",
+        onClick --> { _ =>
+          val selectedId =
+            pathToCursor.now().headOption.getOrElse(reverse(tree))
+          copyTreeStructure(selectedId)
+        }
       )
     ),
     code(encode(tree))
   )
+
+  /** Copy three */
+  private def copyTreeStructure(id: Int): Unit =
+    val treeOpt = direct.get(id)
+    treeOpt.foreach { t =>
+      val structure = generateTreeStructure(t, id)
+      dom.window.navigator.clipboard.writeText(structure)
+    }
+
+  /** Copy select - or + three */
+  private def generateTreeStructure(
+      t: Tree,
+      currentId: Int,
+      depth: Int = 0
+  ): String =
+    val prefix = "  " * depth
+    val isExpanded = openNodes.now().contains(currentId)
+    val hasChildren = t.children.nonEmpty
+    val symbol =
+      if hasChildren then (if isExpanded then "- " else "+ ") else "  "
+
+    val nodeLine =
+      s"$prefix$symbol${t.productPrefix} [${t.pos.start};${t.pos.end}]"
+
+    if !hasChildren || !isExpanded then nodeLine
+    else
+      val childrenText = t.children
+        .map { child =>
+          val childId = reverse(child)
+          generateTreeStructure(child, childId, depth + 1)
+        }
+        .mkString("\n")
+
+      s"$nodeLine\n$childrenText"
+    end if
+  end generateTreeStructure
 
   /** Expand/collapse a single tree by its id */
   private val toggle = openNodes.updater[Int]: (cur, next) =>

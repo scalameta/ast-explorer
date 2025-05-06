@@ -51,7 +51,7 @@ case class TreeView(
     code(encode(tree))
   )
 
-  /** Copy three */
+  /** Copy tree */
   private def copyTreeStructure(id: Int): Unit =
     val treeOpt = direct.get(id)
     treeOpt.foreach { t =>

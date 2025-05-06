@@ -59,7 +59,7 @@ case class TreeView(
       dom.window.navigator.clipboard.writeText(structure)
     }
 
-  /** Copy select - or + three */
+  /** Copy tree starting from selected node */
   private def generateTreeStructure(
       t: Tree,
       currentId: Int,

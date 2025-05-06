@@ -40,9 +40,11 @@ case class TreeView(
         cls := "bg-gray-200 hover:bg-gray-300 rounded-md px-2 py-1 text-xs",
         "copy",
         onClick --> { _ =>
-          val selectedId =
-            pathToCursor.now().headOption.getOrElse(reverse(tree))
-          copyTreeStructure(selectedId)
+          openNodes.set(direct.keySet)
+          dom.window.setTimeout(
+            () => copyTreeStructure(reverse(tree)),
+            0
+          )
         }
       )
     ),
@@ -145,6 +147,7 @@ case class TreeView(
   private def encode(t: Tree): Element =
     val id = reverse(t)
     span(
+      cls := "group",
       span(
         cls <-- pathToCursor.signal.map(p =>
           if p.headOption.contains(id) then "bg-amber-500"
@@ -169,6 +172,16 @@ case class TreeView(
           s"[${t.pos.start};${t.pos.end}]"
         )
       ),
+      if t.children.nonEmpty then
+        a(
+          cls := "ml-2 text-gray-500 hover:text-gray-700 text-xs opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer",
+          title := "Copy node structure",
+          "[copy]",
+          onClick.preventDefault --> { _ =>
+            copyTreeStructure(id)
+          }
+        )
+      else emptyNode,
       ul(
         cls := "list-inside list-none ml-4",
         t.children.map(child => li(encode(child))),

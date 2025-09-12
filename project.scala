@@ -1,6 +1,6 @@
 //> using platform scala-js
 //> using jsVersion 1.18.2
-//> using scala 3.7.2
+//> using scala 3.7.3
 //> using option -Wunused:all
 
 //> using dep org.scala-js::scalajs-dom::2.8.0

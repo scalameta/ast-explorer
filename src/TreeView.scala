@@ -118,7 +118,7 @@ case class TreeView(
               offset - direct(treeId).pos.start
 
           deepest.headOption match
-            case None => Nil
+            case None        => Nil
             case Some(value) =>
               @tailrec
               def go(id: Int, cur: List[Int]): List[Int] =

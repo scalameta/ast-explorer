@@ -24,7 +24,7 @@ object IntervalTree:
         stack: List[Tree]
     ): Option[Tree] =
       workStack match
-        case Nil => stack.headOption
+        case Nil                                             => stack.headOption
         case WorkType.Fuse(centerPoint, overlapping) :: rest =>
           splitTR(
             rest,

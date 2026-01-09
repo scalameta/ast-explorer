@@ -7,6 +7,6 @@
 
 //> using dep com.raquo::laminar::17.2.0
 
-//> using dep org.scalameta:scalameta_sjs1_2.13:4.14.3
+//> using dep org.scalameta:scalameta_sjs1_2.13:4.14.4
 
 //> using test.dep org.scalameta::munit::1.2.1

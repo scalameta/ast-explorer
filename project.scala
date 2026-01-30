@@ -9,4 +9,4 @@
 
 //> using dep org.scalameta:scalameta_sjs1_2.13:4.14.5
 
-//> using test.dep org.scalameta::munit::1.2.1
+//> using test.dep org.scalameta::munit::1.2.2
